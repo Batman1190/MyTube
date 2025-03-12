@@ -8,6 +8,98 @@
     <meta name="description" content="MyTube - A video sharing platform">
     <meta name="keywords" content="video, sharing, MyTube, streaming">
     <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            gap: 20px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;  /* Change from sticky to fixed */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        main {
+            margin-top: 70px;  /* Add margin to account for fixed nav */
+        }
+
+        /* Mobile-first responsive design */
+        @media (max-width: 768px) {
+            nav {
+                padding: 8px;
+            }
+
+            .search-bar {
+                margin: 8px 0;
+                padding: 0 8px;
+            }
+
+            .search-bar input {
+                height: 36px;
+            }
+
+            .search-bar button {
+                height: 36px;
+                padding: 0 15px;
+            }
+
+            .video-grid {
+                padding: 10px;
+            }
+
+            .video-wrapper {
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .video-meta {
+                font-size: 0.85rem;
+            }
+        }
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            min-width: 0;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .upload-btn, .login-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            background: #1a73e8;
+            white-space: nowrap;
+        }
+
         /* Mobile-first responsive design */
         @media (max-width: 768px) {
             .sidebar {
@@ -17,85 +109,60 @@
             .content {
                 margin-left: 0;
                 width: 100%;
-            }
-
-            .search-bar {
-                width: 100%;
-                margin: 10px 0;
+                padding: 10px;
             }
 
             nav {
                 flex-direction: column;
                 padding: 10px;
             }
-        }
 
-        /* Enhanced video player styles */
-        .video-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-            overflow: hidden;
-            width: 100%;
-        }
+            .search-bar {
+                width: 100%;
+                margin: 10px 0;
+                padding: 0 10px;
+            }
 
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
+            .video-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                padding: 10px;
+            }
 
-        .video-wrapper {
-            position: relative;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            background: #000;
-        }
+            .video-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
 
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
+            .video-info h3 {
+                font-size: 1rem;
+            }
 
-        .video-card video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: #000;
-        }
+            .nav-links {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 10px;
+            }
 
-        /* Custom video controls */
-        .video-card video::-webkit-media-controls-panel {
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-        }
+            .logo h1 {
+                font-size: 1.5rem;
+                margin: 0;
+            }
 
-        .video-card video::-webkit-media-controls-play-button {
-            background-color: rgba(255,255,255,0.8);
-            border-radius: 50%;
-            transition: transform 0.2s;
-        }
+            .video-card {
+                margin-bottom: 15px;
+            }
 
-        .video-info {
-            padding: 15px;
-        }
+            .video-info {
+                padding: 12px;
+            }
 
-        .video-info h3 {
-            font-size: 1.1rem;
-            margin: 0 0 8px 0;
-            color: #030303;
-        }
-
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            color: #606060;
-            font-size: 0.9rem;
+            .video-meta span {
+                display: block;
+                margin-bottom: 5px;
+            }
         }
     </style>
 </head>
