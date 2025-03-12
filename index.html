@@ -19,8 +19,8 @@
         nav {
             display: flex;
             align-items: center;
-            padding: 15px;
-            gap: 20px;
+            padding: 10px;
+            gap: 15px;
             background: #fff;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: fixed;
@@ -28,27 +28,28 @@
             left: 0;
             right: 0;
             z-index: 100;
+            height: auto;
         }
 
         main {
-            margin-top: 160px;  /* Increased margin to account for stacked nav items */
+            margin-top: 130px;
         }
 
         /* Mobile-first responsive design */
         @media (max-width: 768px) {
             nav {
+                flex-direction: column;
                 padding: 8px;
-                height: auto;
             }
 
             .logo h1 {
-                font-size: 1.3rem;
-                margin: 5px 0;
+                font-size: 1.2rem;
+                margin: 4px 0;
             }
 
             .search-bar {
-                margin: 5px 0;
-                padding: 0 8px;
+                width: calc(100% - 16px);
+                margin: 4px 0;
             }
 
             .search-bar input {
@@ -57,11 +58,11 @@
 
             .search-bar button {
                 height: 32px;
-                padding: 0 12px;
+                padding: 0 10px;
             }
 
             .nav-links {
-                padding: 5px 0;
+                padding: 4px 0;
             }
 
             .upload-btn, .login-btn {
@@ -73,7 +74,11 @@
         /* For larger screens */
         @media (min-width: 769px) {
             main {
-                margin-top: 70px;  /* Return to original margin for desktop */
+                margin-top: 70px;
+            }
+            
+            nav {
+                flex-direction: row;
             }
         }
         .search-bar {
@@ -202,7 +207,8 @@
             </ul>
         </div>
 
-        <style>
+        <!-- Remove this style block -->
+        <!-- <style>
             .video-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -228,7 +234,7 @@
             .video-info {
                 padding: 15px;
             }
-        </style>
+        </style> -->
 
         <div class="content">
             <div class="video-grid" id="videoGrid">
@@ -318,3 +324,86 @@
     </script>
 </body>
 </html>
+
+/* Video player and grid styles */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-top: 56.25%;
+    background: #000;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    width: 100%;
+}
+
+.video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.video-info {
+    padding: 16px;
+}
+
+.video-info h3 {
+    font-size: 1.1rem;
+    margin: 0 0 8px 0;
+    color: #0f0f0f;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.video-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #606060;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .video-grid {
+        gap: 16px;
+        padding: 12px;
+    }
+    
+    .video-card {
+        margin-bottom: 0;
+    }
+
+    .video-info {
+        padding: 12px;
+    }
+    
+    .video-info h3 {
+        font-size: 1rem;
+    }
+}
