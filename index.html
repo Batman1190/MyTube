@@ -13,7 +13,8 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background: #f9f9f9;
+            background: #2d2d2d;
+            color: #e0e0e0;
         }
 
         nav {
@@ -208,33 +209,53 @@
         </div>
 
         <!-- Remove this style block -->
-        <!-- <style>
-            .video-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-                gap: 20px;
-                padding: 20px;
+        <style>
+            /* Add these video player styles */
+            .video-wrapper {
+                position: relative;
+                padding-top: 56.25%;
+                background: #000000;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 
+                    0 8px 16px rgba(0,0,0,0.5),
+                    inset 0 1px 3px rgba(255,255,255,0.2);
+                transform: perspective(1000px) rotateX(2deg);
+                transition: transform 0.3s ease;
+                margin-bottom: 16px;
+            }
+
+            .video-wrapper:hover {
+                transform: perspective(1000px) rotateX(0deg);
+            }
+
+            .video-wrapper iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
+                height: 100%;
+                border: none;
+                background: #000000;
             }
 
             .video-card {
-                background: #fff;
-                border-radius: 8px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                overflow: hidden;
-                width: 100%;
+                background: #333333;
+                border-radius: 12px;
+                padding: 16px;
+                box-shadow: 
+                    0 4px 8px rgba(0,0,0,0.3),
+                    inset 0 1px 1px rgba(255,255,255,0.1);
+                margin-bottom: 24px;
             }
 
-            .video-card video {
-                width: 100%;
-                max-height: 200px;
-                object-fit: cover;
+            .video-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 24px;
+                padding: 24px;
             }
-
-            .video-info {
-                padding: 15px;
-            }
-        </style> -->
+        </style>
 
         <div class="content">
             <div class="video-grid" id="videoGrid">
