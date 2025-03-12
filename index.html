@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTube</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="MyTube - A video sharing platform">
+    <meta name="keywords" content="video, sharing, MyTube, streaming">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>MyTube</h1>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search videos..." aria-label="Search videos">
+                <button>Search</button>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <!-- Login status will be updated here -->
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="sidebar">
+            <ul>
+                <li><a href="#"><span>Home</span></a></li>
+                <li><a href="#"><span>Trending</span></a></li>
+                <li><a href="#"><span>Subscriptions</span></a></li>
+                <li><a href="#"><span>Library</span></a></li>
+                <li><a href="#"><span>History</span></a></li>
+            </ul>
+        </div>
+
+        <style>
+            .video-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 20px;
+                padding: 20px;
+                width: 100%;
+            }
+
+            .video-card {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .video-card video {
+                width: 100%;
+                max-height: 200px;
+                object-fit: cover;
+            }
+
+            .video-info {
+                padding: 15px;
+            }
+        </style>
+
+        <div class="content">
+            <div class="video-grid" id="videoGrid">
+                <!-- Videos will be loaded dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function updateNavLinks() {
+            const token = localStorage.getItem('token');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (token) {
+                navLinks.innerHTML = `
+                    <a href="upload.html" class="upload-btn">Upload</a>
+                    <a href="#" class="login-btn" id="logoutBtn">Logout</a>
+                `;
+                
+                // Add logout functionality
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('token');
+                    window.location.reload();
+                });
+            } else {
+                navLinks.innerHTML = `
+                    <a href="upload.html" class="upload-btn">Upload</a>
+                    <a href="login.html" class="login-btn">Login</a>
+                `;
+            }
+        }
+
+        // Function to load and display videos
+        async function loadVideos() {
+            try {
+                console.log('Fetching videos...');
+                const response = await fetch('http://localhost:3000/videos');
+                const videos = await response.json();
+                console.log('Received videos:', videos);
+                
+                const videoGrid = document.getElementById('videoGrid');
+                videoGrid.innerHTML = ''; // Clear existing content
+                
+                videos.forEach(video => {
+                    console.log('Processing video:', video);
+                    const videoCard = `
+                        <div class="video-card">
+                            <video width="320" controls>
+                                <source src="http://localhost:3000${video.url}" type="video/mp4">
+                                <source src="http://localhost:3000${video.url.replace('.mp4', '.webm')}" type="video/webm">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="video-info">
+                                <h3>${video.title || 'Untitled'}</h3>
+                                <p>${video.description || 'No description'}</p>
+                                <p>Uploaded: ${new Date(video.uploadDate).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    `;
+                    videoGrid.innerHTML += videoCard;
+                });
+
+                // Add event listeners to all videos
+                document.querySelectorAll('.video-card video').forEach(video => {
+                    video.addEventListener('error', (e) => {
+                        console.error('Video error:', e);
+                        console.log('Failed video source:', e.target.currentSrc);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading videos:', error);
+            }
+        }
+
+        // Check login status and load videos when page loads
+        updateNavLinks();
+        loadVideos();
+    </script>
+</body>
+</html>

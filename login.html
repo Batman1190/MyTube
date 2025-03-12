@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MyTube</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <form class="auth-form" id="loginForm">
+            <h2>Login to MyTube</h2>
+            <div id="errorMessage" style="color: red; margin-bottom: 10px; display: none;"></div>
+            <input type="email" id="email" placeholder="Email" aria-label="Email" required>
+            <input type="password" id="password" placeholder="Password" aria-label="Password" required>
+            <button type="submit">Login</button>
+            <p>Don't have an account? <a href="register.html">Register</a></p>
+            <div id="loading" style="display: none;">Loading...</div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Store token in localStorage
+                    localStorage.setItem('token', data.token);
+                    window.location.href = 'index.html';
+                } else {
+                    errorMessage.textContent = data.error;
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Error logging in';
+                errorMessage.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

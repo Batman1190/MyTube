@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload - MyTube</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1><a href="index.html" style="text-decoration: none; color: #ff0000;">MyTube</a></h1>
+            </div>
+        </nav>
+    </header>
+
+    <div class="upload-container">
+        <form class="upload-form" id="uploadForm">
+            <h2>Upload Video</h2>
+            <div class="upload-input">
+                <input type="file" id="videoFile" accept="video/*" required>
+                <label for="videoFile" class="file-label">Choose Video</label>
+                <div id="selectedFile" style="margin-top: 10px; text-align: center;"></div>
+            </div>
+            <input type="text" id="title" placeholder="Video Title" required>
+            <textarea id="description" placeholder="Video Description" rows="4"></textarea>
+            <button type="submit">Upload Video</button>
+        </form>
+    </div>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('uploadForm');
+            const fileInput = document.getElementById('videoFile');
+            const selectedFile = document.getElementById('selectedFile');
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    selectedFile.textContent = `Selected: ${file.name}`;
+                }
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                try {
+                    const formData = new FormData();
+                    const videoFile = fileInput.files[0];
+                    const title = document.getElementById('title').value;
+                    const description = document.getElementById('description').value;
+                    
+                    if (!videoFile) {
+                        alert('Please select a video file');
+                        return;
+                    }
+
+                    formData.append('video', videoFile);
+                    formData.append('title', title);
+                    formData.append('description', description);
+
+                    const response = await fetch('http://localhost:3000/upload', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Upload failed');
+                    }
+                    
+                    alert('Video uploaded successfully!');
+                    window.location.href = 'index.html';
+                    
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('Error uploading video: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

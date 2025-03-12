@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - MyTube</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <form class="auth-form" id="registerForm">
+            <h2>Create MyTube Account</h2>
+            <div id="errorMessage" style="color: red; margin-bottom: 10px; display: none;"></div>
+            <input type="text" id="username" placeholder="Username" aria-label="Username" required>
+            <input type="email" id="email" placeholder="Email" aria-label="Email" required>
+            <input type="password" id="password" placeholder="Password" aria-label="Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" aria-label="Confirm Password" required>
+            <button type="submit">Register</button>
+            <p>Already have an account? <a href="login.html">Login</a></p>
+            <div id="loading" style="display: none;">Loading...</div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match!';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Registration successful!');
+                    window.location.href = 'login.html';
+                } else {
+                    errorMessage.textContent = data.error;
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Error registering user';
+                errorMessage.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
