@@ -51,6 +51,15 @@
             background: #000;
         }
 
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
         .video-card video {
             position: absolute;
             top: 0;
@@ -178,12 +187,17 @@
         }
 
         // Function to load and display videos
-        async function loadVideos() {
+        function loadVideos() {
             try {
-                console.log('Fetching videos...');
-                const response = await fetch('http://localhost:3000/videos');
-                const videos = await response.json();
-                console.log('Received videos:', videos);
+                console.log('Loading videos...');
+                const videos = [
+                    {
+                        "title": "SMILE by Gracie Gray (MyTube)",
+                        "videoId": "_CMThnVhO5Q",
+                        "description": "A beautiful melody that will make you smile. 🎵✨",
+                        "uploadDate": "2024-01-21"
+                    }
+                ];
                 
                 const videoGrid = document.getElementById('videoGrid');
                 videoGrid.innerHTML = ''; // Clear existing content
@@ -192,11 +206,13 @@
                     const videoCard = `
                         <div class="video-card">
                             <div class="video-wrapper">
-                                <video controls preload="metadata" poster="${video.thumbnailUrl}">
-                                    <source src="http://localhost:3000${video.url}" type="video/mp4">
-                                    <source src="http://localhost:3000${video.url.replace('.mp4', '.webm')}" type="video/webm">
-                                    Your browser does not support the video tag.
-                                </video>
+                                <iframe
+                                    src="https://www.youtube.com/embed/${video.videoId}"
+                                    title="${video.title}"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen>
+                                </iframe>
                             </div>
                             <div class="video-info">
                                 <h3>${video.title || 'Untitled'}</h3>
@@ -208,49 +224,6 @@
                         </div>
                     `;
                     videoGrid.innerHTML += videoCard;
-                });
-
-                // Add enhanced video player features
-                document.querySelectorAll('.video-card video').forEach(video => {
-                    // Playback quality adjustment
-                    video.addEventListener('loadedmetadata', () => {
-                        if (video.videoHeight >= 720) {
-                            video.setAttribute('playsinline', '');
-                            video.setAttribute('controls', '');
-                        }
-                    });
-
-                    // Mobile-friendly playback
-                    video.setAttribute('playsinline', '');
-                    video.setAttribute('webkit-playsinline', '');
-
-                    // Save video progress
-                    video.addEventListener('timeupdate', () => {
-                        localStorage.setItem(`video-progress-${video.querySelector('source').src}`, video.currentTime);
-                    });
-
-                    // Restore video progress
-                    video.addEventListener('loadedmetadata', () => {
-                        const savedTime = localStorage.getItem(`video-progress-${video.querySelector('source').src}`);
-                        if (savedTime) video.currentTime = parseFloat(savedTime);
-                    });
-
-                    // Double tap to seek
-                    let lastTap = 0;
-                    video.addEventListener('touchend', (e) => {
-                        const currentTime = new Date().getTime();
-                        const tapGap = currentTime - lastTap;
-                        if (tapGap < 300 && tapGap > 0) {
-                            const screenWidth = video.getBoundingClientRect().width;
-                            const touchX = e.changedTouches[0].clientX;
-                            if (touchX > screenWidth / 2) {
-                                video.currentTime += 10;
-                            } else {
-                                video.currentTime -= 10;
-                            }
-                        }
-                        lastTap = currentTime;
-                    });
                 });
             } catch (error) {
                 console.error('Error loading videos:', error);
