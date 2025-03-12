@@ -7,6 +7,88 @@
     <link rel="stylesheet" href="styles.css">
     <meta name="description" content="MyTube - A video sharing platform">
     <meta name="keywords" content="video, sharing, MyTube, streaming">
+    <style>
+        /* Mobile-first responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .search-bar {
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            nav {
+                flex-direction: column;
+                padding: 10px;
+            }
+        }
+
+        /* Enhanced video player styles */
+        .video-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+        }
+
+        .video-card video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        /* Custom video controls */
+        .video-card video::-webkit-media-controls-panel {
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        }
+
+        .video-card video::-webkit-media-controls-play-button {
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h3 {
+            font-size: 1.1rem;
+            margin: 0 0 8px 0;
+            color: #030303;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #606060;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -107,29 +189,67 @@
                 videoGrid.innerHTML = ''; // Clear existing content
                 
                 videos.forEach(video => {
-                    console.log('Processing video:', video);
                     const videoCard = `
                         <div class="video-card">
-                            <video width="320" controls>
-                                <source src="http://localhost:3000${video.url}" type="video/mp4">
-                                <source src="http://localhost:3000${video.url.replace('.mp4', '.webm')}" type="video/webm">
-                                Your browser does not support the video tag.
-                            </video>
+                            <div class="video-wrapper">
+                                <video controls preload="metadata" poster="${video.thumbnailUrl}">
+                                    <source src="http://localhost:3000${video.url}" type="video/mp4">
+                                    <source src="http://localhost:3000${video.url.replace('.mp4', '.webm')}" type="video/webm">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
                             <div class="video-info">
                                 <h3>${video.title || 'Untitled'}</h3>
-                                <p>${video.description || 'No description'}</p>
-                                <p>Uploaded: ${new Date(video.uploadDate).toLocaleDateString()}</p>
+                                <div class="video-meta">
+                                    <span>${video.description || 'No description'}</span>
+                                    <span>${new Date(video.uploadDate).toLocaleDateString()}</span>
+                                </div>
                             </div>
                         </div>
                     `;
                     videoGrid.innerHTML += videoCard;
                 });
 
-                // Add event listeners to all videos
+                // Add enhanced video player features
                 document.querySelectorAll('.video-card video').forEach(video => {
-                    video.addEventListener('error', (e) => {
-                        console.error('Video error:', e);
-                        console.log('Failed video source:', e.target.currentSrc);
+                    // Playback quality adjustment
+                    video.addEventListener('loadedmetadata', () => {
+                        if (video.videoHeight >= 720) {
+                            video.setAttribute('playsinline', '');
+                            video.setAttribute('controls', '');
+                        }
+                    });
+
+                    // Mobile-friendly playback
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', '');
+
+                    // Save video progress
+                    video.addEventListener('timeupdate', () => {
+                        localStorage.setItem(`video-progress-${video.querySelector('source').src}`, video.currentTime);
+                    });
+
+                    // Restore video progress
+                    video.addEventListener('loadedmetadata', () => {
+                        const savedTime = localStorage.getItem(`video-progress-${video.querySelector('source').src}`);
+                        if (savedTime) video.currentTime = parseFloat(savedTime);
+                    });
+
+                    // Double tap to seek
+                    let lastTap = 0;
+                    video.addEventListener('touchend', (e) => {
+                        const currentTime = new Date().getTime();
+                        const tapGap = currentTime - lastTap;
+                        if (tapGap < 300 && tapGap > 0) {
+                            const screenWidth = video.getBoundingClientRect().width;
+                            const touchX = e.changedTouches[0].clientX;
+                            if (touchX > screenWidth / 2) {
+                                video.currentTime += 10;
+                            } else {
+                                video.currentTime -= 10;
+                            }
+                        }
+                        lastTap = currentTime;
                     });
                 });
             } catch (error) {
