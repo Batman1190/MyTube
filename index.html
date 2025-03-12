@@ -179,6 +179,139 @@
                 margin-bottom: 5px;
             }
         }
+        <style>
+            /* Update nav styles for dark theme consistency */
+            nav {
+                background: #333333;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+
+            /* Update logo styles */
+            .logo h1 {
+                color: #ff0000;  /* YouTube-like red color */
+                font-size: 1.8rem;
+                font-weight: bold;
+                margin: 0;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            }
+
+            /* Mobile adjustments for logo */
+            @media (max-width: 768px) {
+                .logo h1 {
+                    font-size: 1.5rem;
+                    margin: 4px 0;
+                }
+            }
+
+            .search-bar {
+                width: 100%;
+                margin: 10px 0;
+                padding: 0 10px;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .video-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .video-info h3 {
+                font-size: 1rem;
+            }
+
+            .nav-links {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+                margin: 0;
+            }
+
+            .video-card {
+                margin-bottom: 15px;
+            }
+
+            .video-info {
+                padding: 12px;
+            }
+
+            .video-meta span {
+                display: block;
+                margin-bottom: 5px;
+            }
+        }
+        <style>
+            /* Improve mobile spacing and sizing */
+            @media (max-width: 768px) {
+                main {
+                    margin-top: 160px;
+                }
+
+                nav {
+                    padding: 12px;
+                }
+
+                .search-bar {
+                    width: 100%;
+                    margin: 12px 0;
+                    padding: 0;
+                }
+
+                .search-bar input {
+                    height: 40px;
+                    background: #404040;
+                    border: 1px solid #505050;
+                    color: #ffffff;
+                }
+
+                .search-bar button {
+                    height: 40px;
+                    background: #505050;
+                }
+
+                .video-grid {
+                    padding: 12px;
+                }
+
+                .video-card {
+                    margin-bottom: 20px;
+                    padding: 0;
+                }
+
+                .video-info {
+                    padding: 16px;
+                }
+
+                .video-info h3 {
+                    font-size: 1.1rem;
+                    margin-bottom: 8px;
+                }
+
+                .video-meta {
+                    font-size: 0.9rem;
+                    line-height: 1.4;
+                }
+
+                .nav-links {
+                    padding: 8px 0;
+                }
+
+                .upload-btn, .login-btn {
+                    padding: 8px 16px;
+                    background: #505050;
+                }
+            }
+        </style>
     </style>
 </head>
 <body>
